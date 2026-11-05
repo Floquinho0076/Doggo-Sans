@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en" class="theme-dark-brown">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doggo Sans Typography & Portal</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        doggo: ['"Doggo Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Doggo Sans Font Definition */
+        @font-face {
+            font-family: 'Doggo Sans';
+            src: url('https://dl.dropboxusercontent.com/scl/fi/0kusm8gd8oq2acj12oazk/Doggo-Sans_20261102184229.ttf?rlkey=ylydfehq0h8fxbhxow4lhl15u&st=2hc4ilaa&dl=1') format('truetype');
+            font-weight: 100 900;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        /* ONLY DARK BROWN AND LIGHT BROWN THEMES */
+        :root.theme-dark-brown {
+            --bg-main: #1c0f0a;
+            --bg-secondary: #2b170f;
+            --card-bg: rgba(45, 26, 18, 0.85);
+            --card-border: rgba(160, 100, 60, 0.25);
+            --text-main: #f5e8dd;
+            --text-muted: #c4a48a;
+            --accent: #d97706;
+            --accent-hover: #b45309;
+            --accent-glow: rgba(217, 119, 6, 0.2);
+            --input-bg: rgba(28, 15, 10, 0.6);
+        }
+
+        :root.theme-light-brown {
+            --bg-main: #fdf8f4;
+            --bg-secondary: #f4ece4;
+            --card-bg: #ffffff;
+            --card-border: #e6d7c3;
+            --text-main: #3a2218;
+            --text-muted: #7a5848;
+            --accent: #b45309;
+            --accent-hover: #92400e;
+            --accent-glow: rgba(180, 83, 9, 0.2);
+            --input-bg: #f5ede6;
+        }
+
+        body {
+            font-family: 'Doggo Sans', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Pill Buttons Forced Style */
+        button, .btn-pill {
+            border-radius: 100px !important;
+        }
+
+        .theme-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(12px);
+            transition: all 0.3s ease;
+        }
+
+        .accent-text { color: var(--accent); }
+        .accent-bg { background-color: var(--accent); }
+
+        /* Accordion Smooth Expand */
+        .accordion-wrapper {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.3s ease-out;
+        }
+        
+        .accordion-wrapper.is-open {
+            grid-template-rows: 1fr;
+        }
+
+        .accordion-inner { overflow: hidden; }
+
+        /* Custom Range Slider Styling */
+        input[type="range"] {
+            accent-color: var(--accent);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between p-4 sm:p-6 lg:p-10">
+
+    <div class="max-w-4xl mx-auto w-full space-y-8">
+        
+        <!-- 1. LANGUAGE ACCORDION AT TOP OF PAGE -->
+        <section class="w-full">
+            <div class="theme-card rounded-3xl overflow-hidden shadow-lg border" style="border-color: var(--card-border);">
+                <!-- Accordion Header Trigger -->
+                <button id="accordionToggleBtn" onclick="toggleLanguageAccordion()" class="w-full p-4 sm:p-5 flex items-center justify-between transition-colors hover:opacity-95 btn-pill">
+                    <div class="flex items-center space-x-3">
+                        <img id="selectedFlagImg" src="https://flagcdn.com/us.svg" class="w-7 h-5 object-cover rounded shadow-sm" alt="US Flag">
+                        <div class="text-left">
+                            <span id="selectedLangName" class="font-bold text-sm block">English (US)</span>
+                            <span id="selectedLangNative" class="text-xs opacity-60">United States</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="chevron-down" id="accordionChevron" class="w-5 h-5 transition-transform duration-300 accent-text"></i>
+                    </div>
+                </button>
+
+                <!-- Accordion Body -->
+                <div id="accordionWrapper" class="accordion-wrapper">
+                    <div class="accordion-inner border-t" style="border-color: var(--card-border);">
+                        <div class="p-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2" id="languageListContainer">
+                            <!-- Populated dynamically by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. HEADER & SINGLE MOON ICON THEME TOGGLE BUTTON -->
+        <header class="flex items-center justify-between gap-6 theme-card p-6 sm:p-8 rounded-3xl">
+            <!-- Brand Title -->
+            <div>
+                <h1 class="text-3xl sm:text-4xl font-black font-doggo accent-text tracking-wide leading-none">DOGGO SANS</h1>
+                <p id="txt-subtitle" class="text-xs font-semibold uppercase tracking-widest opacity-70 mt-2">Typography & Interactive Portal</p>
+            </div>
+
+            <!-- Single Moon Theme Toggle Button (Cycles Dark Brown <-> Light Brown) -->
+            <button onclick="toggleTheme()" id="btn-themeToggle" class="w-12 h-12 flex items-center justify-center theme-card hover:scale-105 transition-all shadow-md btn-pill" title="Toggle Theme">
+                <i data-lucide="moon" id="themeIcon" class="w-6 h-6 accent-text"></i>
+            </button>
+        </header>
+
+        <!-- 3. HERO SECTION -->
+        <main class="theme-card rounded-3xl p-8 sm:p-10 space-y-4 text-center sm:text-left">
+            <h2 id="txt-heroTitle" class="text-3xl sm:text-4xl font-black font-doggo leading-tight">
+                Welcome to Doggo Sans Portal
+            </h2>
+
+            <p id="txt-heroDesc" class="text-base sm:text-lg opacity-85 leading-relaxed font-light max-w-2xl">
+                Experience the clean typography of Doggo Sans integrated with interactive multi-language translations and fluid theme switching.
+            </p>
+        </main>
+
+        <!-- 4. FONT PREVIEW & SPACING SLIDER SECTION -->
+        <section class="theme-card rounded-3xl p-8 space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b pb-4" style="border-color: var(--card-border);">
+                <div class="flex items-center space-x-3">
+                    <i data-lucide="type" class="w-6 h-6 accent-text"></i>
+                    <h3 id="txt-previewHeading" class="text-xl font-bold font-doggo">Font Preview</h3>
+                </div>
+
+                <!-- Letter Spacing Slider -->
+                <div class="flex items-center space-x-3 bg-black/5 dark:bg-white/5 px-4 py-2 rounded-full border" style="border-color: var(--card-border);">
+                    <i data-lucide="sliders" class="w-4 h-4 opacity-70"></i>
+                    <label id="txt-spacingLabel" for="spacingSlider" class="text-xs font-semibold whitespace-nowrap">Spacing:</label>
+                    <input type="range" id="spacingSlider" min="-2" max="10" step="0.5" value="0" oninput="updateLetterSpacing(this.value)" class="w-28 sm:w-36 cursor-pointer">
+                    <span id="spacingValue" class="text-xs font-mono font-bold w-10 text-right">0px</span>
+                </div>
+            </div>
+
+            <!-- Editable Live Preview Box -->
+            <div class="space-y-3">
+                <label id="txt-inputLabel" class="text-xs uppercase font-bold tracking-wider opacity-60 block">Interactive Text Preview</label>
+                <textarea id="previewInput" oninput="updatePreviewText(this.value)" rows="3" class="w-full p-4 rounded-2xl border text-base focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all font-doggo" style="background-color: var(--input-bg); border-color: var(--card-border); color: var(--text-main);">The quick brown fox jumps over the lazy dog.</textarea>
+            </div>
+
+            <!-- Font Display Container -->
+            <div class="p-6 rounded-2xl border transition-all" style="background-color: var(--input-bg); border-color: var(--card-border);">
+                <div id="fontDisplay" class="font-doggo text-2xl sm:text-3xl md:text-4xl break-words leading-normal" style="letter-spacing: 0px;">
+                    The quick brown fox jumps over the lazy dog.
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="text-center py-6 border-t text-xs opacity-70 space-y-1" style="border-color: var(--card-border);">
+            <p id="txt-footer" class="font-doggo font-semibold">Doggo Sans Portal • Powered by FlagCDN & Lucide Icons</p>
+        </footer>
+
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Supported Languages with FlagCDN SVG URLs
+        const languages = [
+            { code: 'en-US', flag: 'us', name: 'English (US)', native: 'United States' },
+            { code: 'es', flag: 'es', name: 'Español', native: 'España' },
+            { code: 'fr', flag: 'fr', name: 'Français', native: 'France' },
+            { code: 'de', flag: 'de', name: 'Deutsch', native: 'Deutschland' },
+            { code: 'pt-BR', flag: 'br', name: 'Português', native: 'Brasil' },
+            { code: 'ja', flag: 'jp', name: '日本語', native: '日本' },
+            { code: 'ko', flag: 'kr', name: '한국어', native: '대한민국' }
+        ];
+
+        // Dictionary for Complete Translation
+        const i18n = {
+            'en-US': {
+                subtitle: "Typography & Interactive Portal",
+                heroTitle: "Welcome to Doggo Sans Portal",
+                heroDesc: "Experience the clean typography of Doggo Sans integrated with interactive multi-language translations and fluid theme switching.",
+                previewHeading: "Font Preview",
+                spacingLabel: "Spacing:",
+                inputLabel: "Interactive Text Preview",
+                defaultText: "The quick brown fox jumps over the lazy dog.",
+                footer: "Doggo Sans Portal • Powered by FlagCDN & Lucide Icons"
+            },
+            'es': {
+                subtitle: "Portal Tipográfico e Interactivo",
+                heroTitle: "Bienvenido al Portal Doggo Sans",
+                heroDesc: "Experimente la limpia tipografía de Doggo Sans integrada con traducciones multilingües interactivas y cambio de tema fluido.",
+                previewHeading: "Vista Previa de Fuente",
+                spacingLabel: "Espaciado:",
+                inputLabel: "Vista Previa de Texto Interactivo",
+                defaultText: "El veloz zorro marrón salta sobre el perro perezoso.",
+                footer: "Portal Doggo Sans • Desarrollado con FlagCDN e Iconos Lucide"
+            },
+            'fr': {
+                subtitle: "Portail Typographique et Interactif",
+                heroTitle: "Bienvenue sur le Portail Doggo Sans",
+                heroDesc: "Découvrez la typographie épurée de Doggo Sans intégrée à des traductions multilingues interactives et un changement de thème fluide.",
+                previewHeading: "Aperçu de la Police",
+                spacingLabel: "Espacement:",
+                inputLabel: "Aperçu de Texte Interactif",
+                defaultText: "Le renard brun rapide saute par-dessus le chien paresseux.",
+                footer: "Portail Doggo Sans • Propulsé par FlagCDN & Lucide Icons"
+            },
+            'de': {
+                subtitle: "Typografie & Interaktives Portal",
+                heroTitle: "Willkommen im Doggo Sans Portal",
+                heroDesc: "Erleben Sie die klare Typografie von Doggo Sans integriert mit interaktiver Mehrsprachigkeit und nahtlosem Themenwechsel.",
+                previewHeading: "Schriftvorschau",
+                spacingLabel: "Abstand:",
+                inputLabel: "Interaktive Textvorschau",
+                defaultText: "Der schnelle braune Fuchs springt über den faulen Hund.",
+                footer: "Doggo Sans Portal • Unterstützt durch FlagCDN & Lucide Icons"
+            },
+            'pt-BR': {
+                subtitle: "Portal Tipográfico e Interativo",
+                heroTitle: "Bem-vindo ao Portal Doggo Sans",
+                heroDesc: "Experimente a tipografia limpa de Doggo Sans integrada com traduções multilíngues interativas e alternância fluida de temas.",
+                previewHeading: "Visualização da Fonte",
+                spacingLabel: "Espaçamento:",
+                inputLabel: "Visualização de Texto Interativo",
+                defaultText: "A rápida raposa marrom salta sobre o cão preguiçoso.",
+                footer: "Portal Doggo Sans • Desenvolvido com FlagCDN e Ícones Lucide"
+            },
+            'ja': {
+                subtitle: "タイポグラフィ＆インタラクティブポータル",
+                heroTitle: "Doggo Sans ポータルへようこそ",
+                heroDesc: "洗練された Doggo Sans フォントのタイポグラフィと、多言語翻訳機能、スムーズなテーマ切り替えをお楽しみください。",
+                previewHeading: "フォントプレビュー",
+                spacingLabel: "文字間隔:",
+                inputLabel: "インタラクティブテキストプレビュー",
+                defaultText: "素早い茶色のキツネがのろまな犬を飛び越えます。",
+                footer: "Doggo Sans Portal • FlagCDN および Lucide Icons を使用"
+            },
+            'ko': {
+                subtitle: "타이포그래피 및 대화형 포털",
+                heroTitle: "Doggo Sans 포털에 오신 것을 환영합니다",
+                heroDesc: "다국어 번역 및 매끄러운 테마 전환 기능과 함께 Doggo Sans 서체의 깔끔한 타이포그래피를 경험해 보세요.",
+                previewHeading: "글꼴 미리보기",
+                spacingLabel: "자간:",
+                inputLabel: "대화형 텍스트 미리보기",
+                defaultText: "키스의 꿀팁은 포근한 텍스트로 빠르게 전달됩니다.",
+                footer: "Doggo Sans Portal • FlagCDN 및 Lucide Icons 제공"
+            }
+        };
+
+        // Strict Theme Toggle: Dark Brown <-> Light Brown
+        let isDarkBrown = true;
+        let currentLangCode = 'en-US';
+
+        function toggleTheme() {
+            isDarkBrown = !isDarkBrown;
+            const root = document.documentElement;
+            root.classList.remove('theme-dark-brown', 'theme-light-brown');
+            root.classList.add(isDarkBrown ? 'theme-dark-brown' : 'theme-light-brown');
+        }
+
+        // Letter Spacing Control
+        function updateLetterSpacing(value) {
+            document.getElementById('fontDisplay').style.letterSpacing = `${value}px`;
+            document.getElementById('spacingValue').innerText = `${value}px`;
+        }
+
+        function updatePreviewText(value) {
+            document.getElementById('fontDisplay').innerText = value || i18n[currentLangCode].defaultText;
+        }
+
+        // Language Accordion Toggle
+        let isAccordionOpen = false;
+
+        function toggleLanguageAccordion() {
+            isAccordionOpen = !isAccordionOpen;
+            const wrapper = document.getElementById('accordionWrapper');
+            const chevron = document.getElementById('accordionChevron');
+
+            if (isAccordionOpen) {
+                wrapper.classList.add('is-open');
+                chevron.style.transform = 'rotate(180deg)';
+            } else {
+                wrapper.classList.remove('is-open');
+                chevron.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        function populateLanguages() {
+            const container = document.getElementById('languageListContainer');
+            container.innerHTML = languages.map(lang => `
+                <button onclick="selectLanguage('${lang.code}')" class="w-full px-4 py-2.5 flex items-center justify-between hover:bg-black/10 transition-colors text-left btn-pill">
+                    <div class="flex items-center space-x-3">
+                        <img src="https://flagcdn.com/${lang.flag}.svg" class="w-6 h-4 object-cover rounded shadow-sm" alt="${lang.name}">
+                        <div>
+                            <div class="text-xs font-bold">${lang.name}</div>
+                            <div class="text-[10px] opacity-60">${lang.native}</div>
+                        </div>
+                    </div>
+                    <i data-lucide="check" class="w-4 h-4 accent-text opacity-0 lang-check" id="check-${lang.code}"></i>
+                </button>
+            `).join('');
+
+            selectLanguage('en-US');
+            lucide.createIcons();
+        }
+
+        // Select and translate across entire UI
+        function selectLanguage(code) {
+            currentLangCode = code;
+            const lang = languages.find(l => l.code === code);
+            const dict = i18n[code] || i18n['en-US'];
+
+            document.getElementById('selectedFlagImg').src = `https://flagcdn.com/${lang.flag}.svg`;
+            document.getElementById('selectedLangName').innerText = lang.name;
+            document.getElementById('selectedLangNative').innerText = lang.native;
+
+            // Apply text translations
+            document.getElementById('txt-subtitle').innerText = dict.subtitle;
+            document.getElementById('txt-heroTitle').innerText = dict.heroTitle;
+            document.getElementById('txt-heroDesc').innerText = dict.heroDesc;
+            document.getElementById('txt-previewHeading').innerText = dict.previewHeading;
+            document.getElementById('txt-spacingLabel').innerText = dict.spacingLabel;
+            document.getElementById('txt-inputLabel').innerText = dict.inputLabel;
+            document.getElementById('txt-footer').innerText = dict.footer;
+
+            // Reset preview text to default translated sentence
+            const inputEl = document.getElementById('previewInput');
+            inputEl.value = dict.defaultText;
+            updatePreviewText(dict.defaultText);
+
+            // Toggle visual checkmark
+            document.querySelectorAll('.lang-check').forEach(el => el.style.opacity = '0');
+            const activeCheck = document.getElementById(`check-${code}`);
+            if (activeCheck) activeCheck.style.opacity = '1';
+
+            if (isAccordionOpen) toggleLanguageAccordion();
+        }
+
+        window.onload = function() {
+            populateLanguages();
+            lucide.createIcons();
+        };
+    </script>
+</body>
+</html>
